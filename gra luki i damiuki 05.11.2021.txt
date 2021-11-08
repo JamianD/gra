@@ -1,0 +1,122 @@
+from random import randint, random;
+#------------------------------------Klasa
+#[życie,mana,kondycja]
+
+
+life = 0
+mana = 0
+kondycja = 0
+
+
+
+# Wojownik = [250,40,150]
+# Zabujca = [120,60,240]
+# Mag = [100,240,100]
+
+# Lista_klas= [Wojownik,Zabujca,Mag]
+
+def wybierz_klase():
+    global life, mana, kondycja
+    inp = input("co wybierasz")
+    if inp.upper() == 'W':
+        life = 200 + randint(10,50)
+        mana = 60
+        kondycja = 100 + randint(10,30)
+    if inp.upper() == 'Z':
+        life = 100 + randint(10,30)
+        mana = 60
+        kondycja = 200 + randint(10,50)
+    if inp.upper() == 'M':
+        life = 60
+        mana =200 + randint(10,50)
+        kondycja = 100 + randint(10,30)
+
+
+    
+
+print('w - WOJWONIK')
+print('z - ZABÓJCA')
+print('m - MAG')
+wybierz_klase()
+
+# ---------------------------------Hero
+name = input('Podaj imie twojego bohatera  ')
+# life = Lista_klas[0][0]
+# mana =  Lista_klas[0]
+# kondycja = Klasa[2]
+#---------------------------------Atak
+def zwykły_atak():
+    return randint(3,10)
+
+def silny_atak():
+    global kondycja
+    kondycja -= 15
+    return randint(10,17)
+
+def fire_ball():
+    global mana # Zwróć uwagę na słowo global !!!
+    mana -= 10
+    return randint(20,27)
+
+def wybierz_atak():
+    print('a/A - Wykonaj Normalny Atak')
+    print('b/B - Wykonaj SILNY ATAK')
+    print('c/C - Fire ball!!!!!!!!!!!!')
+    co = input()
+    if co.upper() == 'A':
+        return zwykły_atak()
+    elif co.upper() == 'B':
+        if kondycja >= 15:
+            print("-"*400)
+            return silny_atak()
+        else:
+            print("-"*40)
+            print("jesteś zbyt zmęczony")
+            return 0
+            
+    elif co.upper() == 'C':
+        if mana >= 10:
+            print("-"*400)
+            return fire_ball()  
+        else:
+            print("-"*40)
+            print("Nie masz many D...   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" )
+            return 0
+    else:
+        print("Nie wybrano akcji")
+        return 0
+#---------------------------------Opponents
+# Name - 0 HP - 1 Basic Atac - 2 Mana - 3
+goblin = ["Mały Goblin",15,3,0]
+nymph = ["Nimfa Wodna",10,3,0]
+szkielet = ["Szkielet",5,5,0]
+list_Opponents = [goblin,nymph,szkielet]
+
+def random_oponent():
+    global kondycja
+    kondycja -=3
+    Opponent =  list_Opponents[randint(0,2)].copy()
+    return Opponent
+#---------------------------------Game
+liczba_pokonanych_przeciwników = 0
+
+while life > 0 and kondycja > 0:
+    Opponent = random_oponent()
+    print("-"*40)
+    while Opponent[1] > 0:
+        print(f"{name} walczy teraz z {Opponent[0]}")
+        print(f"Przeciwnik ma {Opponent[1]} Hp i zadaje ci {Opponent[2]} obrażeń")
+        life = life - Opponent[2]
+        if life < 0:
+            break
+        print(f"Zostało ci {life} Hp, {kondycja} kondychji i {mana} Many")
+        atak  = wybierz_atak()
+        Opponent[1] = Opponent[1] - atak
+        print(f"Zadałeś {atak} obrażeń")
+    print("-"*40)
+    print('Zabiłeś przeciwnika !!!')
+    liczba_pokonanych_przeciwników += 1
+
+print("-"*40)
+print("YOU LOST !!!!")
+print(f"Zabiles {liczba_pokonanych_przeciwników} przeciwników")
